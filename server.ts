@@ -18,6 +18,7 @@ interface DBOptions {
 const options: DBOptions = {
   // user: ,
   // password: ,
+  port: 5432,
   host: 'localhost',
   database: 'lovelystay_test',
 };
