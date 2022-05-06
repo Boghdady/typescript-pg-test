@@ -1,76 +1,18 @@
-const pgPromise = require('pg-promise');
-const R = require('ramda');
 const request = require('request-promise');
 
-// Limit the amount of debugging of SQL expressions
-const trimLogsSize: number = 200;
+const { GithubUser } = require('./dtos/github-user.dto');
+const insertAllUsersAsInLisbonFn = require('./features/users/insert-all-users');
+const createUserTableFn = require('./features/users/create-user-table');
+const dbConfig = require('./config/db-connection');
 
-// Database interface
-interface DBOptions {
-  host: string;
-  database: string;
-  user?: string;
-  password?: string;
-  port?: number;
+// Add more switch cases like "select specific, select all , delete, update"
+switch (process.argv[2]) {
+  case 'create':
+    createUserTableFn(dbConfig);
+    break;
+  case 'insert':
+    insertAllUsersAsInLisbonFn(dbConfig, request);
+    break;
+  default:
+    createUserTableFn(dbConfig);
 }
-
-// Actual database options
-const options: DBOptions = {
-  user: 'postgres',
-  password: 'postgres',
-  port: 5432,
-  host: 'postgres',
-  database: 'lovelystay_test',
-};
-
-console.info(
-  'Connecting to the database:',
-  `${options.user}@${options.host}:${options.port}/${options.database}`
-);
-
-const pgpDefaultConfig = {
-  promiseLib: require('bluebird'),
-  // Log all querys
-  query(query) {
-    console.log('[SQL   ]', R.take(trimLogsSize, query.query));
-  },
-  // On error, please show me the SQL
-  error(err, e) {
-    if (e.query) {
-      console.error('[SQL   ]', R.take(trimLogsSize, e.query), err);
-    }
-  },
-};
-
-interface GithubUsers {
-  id: number;
-  name?: string;
-  login?: string;
-  company?: string;
-  type?: string;
-  site_admin?: boolean;
-}
-
-const pgp = pgPromise(pgpDefaultConfig);
-const db = pgp(options);
-
-db.none(
-  'DROP TABLE IF EXISTS github_users; CREATE TABLE github_users (id BIGSERIAL, login TEXT, name TEXT, company TEXT, type TEXT, site_admin Boolean); CREATE UNIQUE INDEX users_indexes ON github_users(login, name, company, type, site_admin)'
-)
-  .then(() =>
-    request({
-      uri: 'https://api.github.com/users/gaearon',
-      headers: {
-        'User-Agent': 'Request-Promise',
-      },
-      json: true,
-    })
-  )
-  .then((data: GithubUsers) =>
-    db.one(
-      'INSERT INTO github_users (login, name, company, type, site_admin) VALUES ($[login], $[name], $[company], $[type], $[site_admin]) RETURNING id, login, name, company, type, site_admin ',
-      { ...data, name: process.argv[2] ? process.argv[2] : data.name }
-    )
-  )
-  .then((data: GithubUsers) => console.log(data))
-  .then(() => process.exit(0));

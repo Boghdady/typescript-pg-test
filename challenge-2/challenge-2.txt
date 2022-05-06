@@ -60,3 +60,40 @@ the statement =>  "CREATE UNIQUE INDEX name ON table (column [, ...]);"
  site_admin | boolean |           |          | 
 Indexes:
     "users_indexes" UNIQUE, btree (login, name, company, type, site_admin)
+
+
+===================================================================================================================
+(Use case 5) Modify the program to, under a different command-line option, list all users on the database registered on Github as being in Lisbon; Try to split the code into functions to access the database, and functions that process the database results (pure functions);
+
+# I understand the requirements need to add Lisbon for all users in db, if i miss undersatnd kindly inform me and i will edit the task
+
+
+# using psql : \d github_users
+
+ id |    login     | name |  company   |     type     | site_admin |                    repos_url                    | location 
+----+--------------+------+------------+--------------+------------+-------------------------------------------------+----------
+  1 | gaearon      | dan  | @facebook  | User         | f          | https://api.github.com/users/gaearon/repos      | 
+  2 | mojombo      |      |            | User         | f          | https://api.github.com/users/mojombo/repos      | Lisbon
+  3 | defunkt      |      |            | User         | f          | https://api.github.com/users/defunkt/repos      | Lisbon
+  4 | pjhyett      |      |            | User         | f          | https://api.github.com/users/pjhyett/repos      | Lisbon
+  5 | wycats       |      |            | User         | f          | https://api.github.com/users/wycats/repos       | Lisbon
+  6 | ezmobius     |      |            | User         | f          | https://api.github.com/users/ezmobius/repos     | Lisbon
+  7 | ivey         |      |            | User         | f          | https://api.github.com/users/ivey/repos         | Lisbon
+  8 | evanphx      |      |            | User         | f          | https://api.github.com/users/evanphx/repos      | Lisbon
+  9 | vanpelt      |      |            | User         | f          | https://api.github.com/users/vanpelt/repos      | Lisbon
+ 10 | wayneeseguin |      |            | User         | f          | https://api.github.com/users/wayneeseguin/repos | Lisbon
+ 11 | brynary      |      |            | User         | f          | https://api.github.com/users/brynary/repos      | Lisbon
+ 12 | kevinclark   |      |            | User         | f          | https://api.github.com/users/kevinclark/repos   | Lisbon
+ 13 | technoweenie |      |            | User         | f          | https://api.github.com/users/technoweenie/repos | Lisbon
+ 14 | macournoyer  |      |            | User         | f          | https://api.github.com/users/macournoyer/repos  | Lisbon
+ 15 | takeo        |      |            | User         | f          | https://api.github.com/users/takeo/repos        | Lisbon
+ 16 | caged        |      |            | User         | f          | https://api.github.com/users/caged/repos        | Lisbon
+ 17 | topfunky     |      |            | User         | f          | https://api.github.com/users/topfunky/repos     | Lisbon
+ 18 | anotherjesse |      |            | User         | f          | https://api.github.com/users/anotherjesse/repos | Lisbon
+ 19 | roland       |      |            | User         | f          | https://api.github.com/users/roland/repos       | Lisbon
+ 20 | lukas        |      |            | User         | f          | https://api.github.com/users/lukas/repos        | Lisbon
+ 21 | fanvsfan     |      |            | User         | f          | https://api.github.com/users/fanvsfan/repos     | Lisbon
+ 22 | tomtt        |      |            | User         | f          | https://api.github.com/users/tomtt/repos        | Lisbon
+ 23 | railsjitsu   |      |            | User         | f          | https://api.github.com/users/railsjitsu/repos   | Lisbon
+ 24 | nitay        |      |            | User         | f          | https://api.github.com/users/nitay/repos        | Lisbon
+
