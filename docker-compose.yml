@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - '5432:5432'
+    volumes:
+      - lovelystay-db:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    ports:
+      - '1234:1234'
+
+volumes:
+  lovelystay-db:

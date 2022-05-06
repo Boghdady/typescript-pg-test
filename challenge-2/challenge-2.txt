@@ -1,0 +1,11 @@
+=> Challenge 2: BACKEND
+   ===================
+
+1- Install Postgres (v11 preferably) & nodejs 12 (describe what you needed to do to have these versions)
+
+=> solution-1 =>   "Use NVM, stand for node version manager for node and change my current node version to 12 and setup postgres v11 on my local machine" (Not the best solution)
+
+=> solution-2=> "Use docker" (Good solution, and i will use it)
+- Usage :
+1- docker build -t typescript-pg-test .
+2- docker-compose up --build
