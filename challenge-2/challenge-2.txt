@@ -101,3 +101,13 @@ Indexes:
 
  ===================================================================================================================
  (Use case 6) Now assume we want to have a list of languages liked by each user - how would you add that information to the database, and how could you select a user on a given location and with a given language preference - please implement that on code;
+
+ ===================================================================================================================
+
+ (Use case 7) If the tables become too big / the accesses too slow, what would you do to improve their speed?
+1- Reorganize the data to reduce the searching of the data.
+2- Use PostgreSQL 9.2 feature "index-only scans"
+Index-only scans are a major performance feature added to Postgres 9.2. They allow certain types of queries to be satisfied just by retrieving data from indexes, and not from tables. This can result in a significant reduction in the amount of I/O necessary to satisfy queries
+3- Add cashing layer like "Redis" if data not change get the data from cashing layer
+4- And We can enhance the performance when  frequently insert/update more than one record of the same type not only when selecting data
+https://github.com/vitaly-t/pg-promise/wiki/Performance-Boost
