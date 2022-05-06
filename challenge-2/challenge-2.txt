@@ -97,3 +97,7 @@ Indexes:
  23 | railsjitsu   |      |            | User         | f          | https://api.github.com/users/railsjitsu/repos   | Lisbon
  24 | nitay        |      |            | User         | f          | https://api.github.com/users/nitay/repos        | Lisbon
 
+
+
+ ===================================================================================================================
+ (Use case 6) Now assume we want to have a list of languages liked by each user - how would you add that information to the database, and how could you select a user on a given location and with a given language preference - please implement that on code;
