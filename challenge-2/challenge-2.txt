@@ -13,7 +13,22 @@
 
  ===================================================================================================================
 
- (Usecase 1) =>  Improve the database calls to allow the program to be run any number of times (without complaining that the table already exists) (what would be a more permanent solution to this?);
+ (Use case 1) =>  Improve the database calls to allow the program to be run any number of times (without complaining that the table already exists) (what would be a more permanent solution to this?);
 
 => solution => If table exists drop table then create it, if it does not exist just create it so i add this statement "DROP TABLE IF EXISTS github_users;"
 That statement drops the table if it exists but will not throw an error if it does not
+
+
+
+===================================================================================================================
+(Use case 2) => Improve the program to take a command-line argument with the name of the GitHub user;
+
+answer => npm run test ahmed , write this in "command-line"
+
+The way you retrieve it is using the "process" object built into Node.js.
+It exposes an "argv" property, which is an array that contains all the command line invocation arguments.
+
+the statement => "  db.one(
+      `INSERT INTO github_users (login, name) VALUES ($[login], $[name]) RETURNING id`,
+      { ...data, name: process.argv[2] ? process.argv[2] : data.name }
+    )"

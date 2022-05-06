@@ -44,6 +44,7 @@ const pgpDefaultConfig = {
 
 interface GithubUsers {
   id: number;
+  name: string;
 }
 
 const pgp = pgPromise(pgpDefaultConfig);
@@ -63,8 +64,8 @@ db.none(
   )
   .then((data: GithubUsers) =>
     db.one(
-      'INSERT INTO github_users (login) VALUES ($[login]) RETURNING id',
-      data
+      'INSERT INTO github_users (login, name) VALUES ($[login], $[name]) RETURNING id',
+      { ...data, name: process.argv[2] ? process.argv[2] : data.name }
     )
   )
   .then(({ id }) => console.log(id))
