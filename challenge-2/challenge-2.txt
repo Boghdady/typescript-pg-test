@@ -6,6 +6,14 @@
 => solution-1 =>   "Use NVM, stand for node version manager for node and change my current node version to 12 and setup postgres v11 on my local machine" (Not the best solution)
 
 => solution-2=> "Use docker" (Good solution, and i will use it)
+
 - Usage :
 1- docker build -t typescript-pg-test .
 2- docker-compose up --build
+
+ ===================================================================================================================
+
+ (Usecase 1) =>  Improve the database calls to allow the program to be run any number of times (without complaining that the table already exists) (what would be a more permanent solution to this?);
+
+=> solution => If table exists drop table then create it, if it does not exist just create it so i add this statement "DROP TABLE IF EXISTS github_users;"
+That statement drops the table if it exists but will not throw an error if it does not

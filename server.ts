@@ -50,7 +50,7 @@ const pgp = pgPromise(pgpDefaultConfig);
 const db = pgp(options);
 
 db.none(
-  'CREATE TABLE github_users (id BIGSERIAL, login TEXT, name TEXT, company TEXT)'
+  'DROP TABLE IF EXISTS github_users; CREATE TABLE github_users (id BIGSERIAL, login TEXT, name TEXT, company TEXT)'
 )
   .then(() =>
     request({
