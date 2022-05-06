@@ -44,14 +44,18 @@ const pgpDefaultConfig = {
 
 interface GithubUsers {
   id: number;
-  name: string;
+  name?: string;
+  login?: string;
+  company?: string;
+  type?: string;
+  site_admin?: boolean;
 }
 
 const pgp = pgPromise(pgpDefaultConfig);
 const db = pgp(options);
 
 db.none(
-  'DROP TABLE IF EXISTS github_users; CREATE TABLE github_users (id BIGSERIAL, login TEXT, name TEXT, company TEXT)'
+  'DROP TABLE IF EXISTS github_users; CREATE TABLE github_users (id BIGSERIAL, login TEXT, name TEXT, company TEXT, type TEXT, site_admin Boolean)'
 )
   .then(() =>
     request({
@@ -64,9 +68,9 @@ db.none(
   )
   .then((data: GithubUsers) =>
     db.one(
-      'INSERT INTO github_users (login, name) VALUES ($[login], $[name]) RETURNING id',
+      'INSERT INTO github_users (login, name, company, type, site_admin) VALUES ($[login], $[name], $[company], $[type], $[site_admin]) RETURNING id, login, name, company, type, site_admin ',
       { ...data, name: process.argv[2] ? process.argv[2] : data.name }
     )
   )
-  .then(({ id }) => console.log(id))
+  .then((data: GithubUsers) => console.log(data))
   .then(() => process.exit(0));

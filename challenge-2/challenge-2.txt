@@ -32,3 +32,11 @@ the statement => "  db.one(
       `INSERT INTO github_users (login, name) VALUES ($[login], $[name]) RETURNING id`,
       { ...data, name: process.argv[2] ? process.argv[2] : data.name }
     )"
+
+===================================================================================================================
+(Use case 3) Add more fields (to the database and to the API calls);
+
+the statement => db.one(
+      'INSERT INTO github_users (login, name, company, type, site_admin) VALUES ($[login], $[name], $[company], $[type], $[site_admin]) RETURNING id, login, name, company, type, site_admin ',
+      {data}
+    )
