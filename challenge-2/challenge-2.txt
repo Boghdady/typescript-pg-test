@@ -40,3 +40,23 @@ the statement => db.one(
       'INSERT INTO github_users (login, name, company, type, site_admin) VALUES ($[login], $[name], $[company], $[type], $[site_admin]) RETURNING id, login, name, company, type, site_admin ',
       {data}
     )
+
+===================================================================================================================
+(Use case 4) Modify the code or database to not allow duplicate users (depend on what? name or all fields ?) on the database;
+We will use Unique Indexes, When an index is declared unique, multiple table rows with equal indexed values are not allowed. (We can create indexs using pgAdmin or using code, i prefered to use code)
+the statement =>  "CREATE UNIQUE INDEX name ON table (column [, ...]);" 
+
+"CREATE UNIQUE INDEX users_indexes ON github_users(login, name, company, type, site_admin)"
+
+# using psql : \d github_users
+
+   Column   |  Type   | Collation | Nullable |                 Default                  
+------------+---------+-----------+----------+------------------------------------------
+ id         | bigint  |           | not null | nextval('github_users_id_seq'::regclass)
+ login      | text    |           |          | 
+ name       | text    |           |          | 
+ company    | text    |           |          | 
+ type       | text    |           |          | 
+ site_admin | boolean |           |          | 
+Indexes:
+    "users_indexes" UNIQUE, btree (login, name, company, type, site_admin)
