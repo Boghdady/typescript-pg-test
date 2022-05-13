@@ -1,5 +1,5 @@
 function insertUserWithPreferredLanguages(dbConfig, request, languages) {
-  request({
+  return request({
     uri: 'https://api.github.com/users/gaearon',
     headers: {
       'User-Agent': 'Request-Promise',

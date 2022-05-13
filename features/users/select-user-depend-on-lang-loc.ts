@@ -3,7 +3,7 @@ function selectUserWithPreferredLanguagesAndLocation(
   language,
   location
 ) {
-  dbConfig.db
+  return dbConfig.db
     .any(
       `SELECT * FROM github_users WHERE '${language}'= ANY (languages) AND location= '${location}'`
     )
