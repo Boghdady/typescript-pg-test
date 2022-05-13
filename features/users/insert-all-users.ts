@@ -1,5 +1,3 @@
-// // const dbConfigurations = require('../../config/db-connection');
-// const req = require('request-promise');
 // our set of columns, to be created only once (statically), and then reused,
 // to let it cache up its formatting templates for high performance:
 function insertAllUsersAsInLisbon(dbConfig, request) {
@@ -36,7 +34,6 @@ function insertAllUsersAsInLisbon(dbConfig, request) {
     // executing the query:
     dbConfig.db.none(query);
   });
-  // .then(() => process.exit(0));
 }
 
 module.exports = insertAllUsersAsInLisbon;
