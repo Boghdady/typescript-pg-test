@@ -1,70 +1,33 @@
-const pgPromise = require('pg-promise');
-const R = require('ramda');
 const request = require('request-promise');
 
-// Limit the amount of debugging of SQL expressions
-const trimLogsSize: number = 200;
+const { GithubUser } = require('./dtos/github-user.dto');
+const insertAllUsersAsInLisbonFn = require('./features/users/insert-all-users');
+const createUserTableFn = require('./features/users/create-user-table');
+const selectUserWithPreferredLanguagesAndLocationFn = require('./features/users/select-user-depend-on-lang-loc');
+const listLanguagesForEachUserFn = require('./features/users/list-languages-for-each-user');
+const insertUserLanguagesFn = require('./features/users/insert-user-language');
 
-// Database interface
-interface DBOptions {
-  host: string;
-  database: string;
-  user?: string;
-  password?: string;
-  port?: number;
+const dbConfig = require('./config/db-connection');
+
+switch (process.argv[2]) {
+  case 'create':
+    createUserTableFn(dbConfig);
+    break;
+  case 'insert':
+    insertAllUsersAsInLisbonFn(dbConfig, request);
+    break;
+  case 'list-each-user-langs-and-adding-to-db':
+    listLanguagesForEachUserFn(request, process.argv[3]).then((languages) => {
+      insertUserLanguagesFn(dbConfig, process.argv[3], languages);
+    });
+    break;
+  case 'select-user-with-preferred-langs-and-location':
+    selectUserWithPreferredLanguagesAndLocationFn(
+      dbConfig,
+      process.argv[3],
+      process.argv[4]
+    );
+    break;
+  default:
+    createUserTableFn(dbConfig);
 }
-
-// Actual database options
-const options: DBOptions = {
-  // user: ,
-  // password: ,
-  host: 'localhost',
-  database: 'lovelystay_test',
-};
-
-console.info(
-  'Connecting to the database:',
-  `${options.user}@${options.host}:${options.port}/${options.database}`
-);
-
-const pgpDefaultConfig = {
-  promiseLib: require('bluebird'),
-  // Log all querys
-  query(query) {
-    console.log('[SQL   ]', R.take(trimLogsSize, query.query));
-  },
-  // On error, please show me the SQL
-  error(err, e) {
-    if (e.query) {
-      console.error('[SQL   ]', R.take(trimLogsSize, e.query), err);
-    }
-  },
-};
-
-interface GithubUsers {
-  id: number;
-}
-
-const pgp = pgPromise(pgpDefaultConfig);
-const db = pgp(options);
-
-db.none(
-  'CREATE TABLE github_users (id BIGSERIAL, login TEXT, name TEXT, company TEXT)'
-)
-  .then(() =>
-    request({
-      uri: 'https://api.github.com/users/gaearon',
-      headers: {
-        'User-Agent': 'Request-Promise',
-      },
-      json: true,
-    })
-  )
-  .then((data: GithubUsers) =>
-    db.one(
-      'INSERT INTO github_users (login) VALUES ($[login]) RETURNING id',
-      data
-    )
-  )
-  .then(({ id }) => console.log(id))
-  .then(() => process.exit(0));

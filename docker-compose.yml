@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - '5432:5432'
+    volumes:
+      - lovelystay-db:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    ports:
+      - '1234:1234'
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - '5050:80'
+
+volumes:
+  lovelystay-db:
