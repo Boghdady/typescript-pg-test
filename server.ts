@@ -3,12 +3,12 @@ const request = require('request-promise');
 const { GithubUser } = require('./dtos/github-user.dto');
 const insertAllUsersAsInLisbonFn = require('./features/users/insert-all-users');
 const createUserTableFn = require('./features/users/create-user-table');
-const insertUserWithPreferredLanguagesFn = require('./features/users/insert-user-with-languages');
 const selectUserWithPreferredLanguagesAndLocationFn = require('./features/users/select-user-depend-on-lang-loc');
+const listLanguagesForEachUserFn = require('./features/users/list-languages-for-each-user');
+const insertUserLanguagesFn = require('./features/users/insert-user-language');
 
 const dbConfig = require('./config/db-connection');
 
-// Add more switch cases like "select specific, select all , delete, update"
 switch (process.argv[2]) {
   case 'create':
     createUserTableFn(dbConfig);
@@ -16,11 +16,17 @@ switch (process.argv[2]) {
   case 'insert':
     insertAllUsersAsInLisbonFn(dbConfig, request);
     break;
-  case 'insert-user-with-preferred-langs':
-    insertUserWithPreferredLanguagesFn(dbConfig, request, ['JS', 'Java', 'C#']);
+  case 'list-each-user-langs-and-adding-to-db':
+    listLanguagesForEachUserFn(request, process.argv[3]).then((languages) => {
+      insertUserLanguagesFn(dbConfig, process.argv[3], languages);
+    });
     break;
   case 'select-user-with-preferred-langs-and-location':
-    selectUserWithPreferredLanguagesAndLocationFn(dbConfig, 'Java', 'Egypt');
+    selectUserWithPreferredLanguagesAndLocationFn(
+      dbConfig,
+      process.argv[3],
+      process.argv[4]
+    );
     break;
   default:
     createUserTableFn(dbConfig);

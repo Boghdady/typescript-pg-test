@@ -1,3 +1,8 @@
+/**
+ * @desc   If table exists drop table then create it, if it does not exist just create it
+ * @param  {Object} dbConfig Shared database configuration object
+ * @return {Promise}      Promise with resolving or reject
+ */
 function createUserTable(dbConfig) {
   return dbConfig.db
     .none(
